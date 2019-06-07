@@ -11,7 +11,6 @@ public class GunController : MonoBehaviour
     void Start()
     {
         _trans = transform;
-        Debug.Log(_trans.name);
     }
 
     public void ChangeDirection(Transform target)

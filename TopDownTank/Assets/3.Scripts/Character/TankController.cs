@@ -52,11 +52,16 @@ public class TankController : MonoBehaviour
             _moveController.Moving(_dir);
         }
 
-        if (Input.GetMouseButton(0))
+        if (!_currentTarget)
         {
             var positionMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             _barriel.ChangeDirection(positionMouse);
+        }
+        else
+        {
+            _barriel.ChangeDirection(_currentTarget.position);
+
         }
 
         AfterUpdate();
@@ -70,12 +75,8 @@ public class TankController : MonoBehaviour
         if (!_enemy.Contains(hit.transform))
         {
             _enemy.Add(hit.transform);
-            _enemy.Sort((x, y) =>
-            {
-                var dis1 = Vector2.Distance(x.position, _trans.position);
-                var dis2 = Vector2.Distance(y.position, _trans.position);
-                return dis1 < dis2 ? -1 : dis1 > dis2 ? 1 : 0;
-            });
+
+            SortEnemyList();
         }
     }
 
@@ -84,7 +85,22 @@ public class TankController : MonoBehaviour
         if (_enemy.Contains(hit.transform))
         {
             _enemy.Remove(hit.transform);
+            SortEnemyList();
         }
+    }
+
+    private void SortEnemyList()
+    {
+        _enemy.Sort((x, y) =>
+        {
+            var dis1 = Vector2.Distance(x.position, _trans.position);
+            var dis2 = Vector2.Distance(y.position, _trans.position);
+            return dis1 < dis2 ? -1 : dis1 > dis2 ? 1 : 0;
+        });
+
+        if (_enemy.Count > 0)
+            _currentTarget = _enemy[0];
+        else _currentTarget = null;
     }
 
     void BeforUpdate()
