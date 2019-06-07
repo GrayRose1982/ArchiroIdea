@@ -7,7 +7,7 @@ public class MovingCharacter : MonoBehaviour
     [SerializeField]
     private Vector2 _dir;
     [SerializeField]
-    private float _speed;
+    private float _speed = 5f;
 
     private Transform _trans;
 
@@ -18,16 +18,13 @@ public class MovingCharacter : MonoBehaviour
         _dir = Vector2.zero;
     }
 
-    void Update()
+    public void Moving(Vector2 newDir)
     {
-        _dir.x = Input.GetAxisRaw("Horizontal");
-        _dir.y = Input.GetAxisRaw("Vertical");
+        _dir = newDir;
         _dir.Normalize();
 
-        if (Vector2.Distance(_dir, Vector2.zero) <= 0)
-        {
-            _trans.position = (Vector3)(_dir * _speed * Time.deltaTime) + _trans.position;
-            _trans.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg - 90);
-        }
+        _trans.position = (Vector3)(_dir * _speed * Time.deltaTime) + _trans.position;
+        _trans.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg - 90);
+
     }
 }
