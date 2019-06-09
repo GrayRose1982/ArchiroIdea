@@ -5,6 +5,10 @@ using System;
 
 public class TankController : MonoBehaviour
 {
+    public static TankController Instance;
+    [Header("Reference")]
+    [SerializeField]
+    private Transform _body;
     [SerializeField]
     private GunController _barriel;
 
@@ -14,16 +18,13 @@ public class TankController : MonoBehaviour
     [SerializeField]
     private List<Transform> _enemy;
 
-    [SerializeField]
-    private Transform _trans;
-
-
     [Header("In-game"), SerializeField]
     private bool _isMoving = false;
-
     [SerializeField]
     private Transform _currentTarget;
-
+    [SerializeField]
+    private Transform _trans;
+  
 
     void Reset()
     {
@@ -32,6 +33,11 @@ public class TankController : MonoBehaviour
 
         if (_moveController)
             _moveController = GetComponent<MovingCharacter>();
+    }
+
+    void Awake()
+    {
+        Instance = this;
     }
 
     void Start()
@@ -50,18 +56,23 @@ public class TankController : MonoBehaviour
         {
             _isMoving = true;
             _moveController.Moving(_dir);
+
+            _body.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg - 90);
         }
 
         if (!_currentTarget)
         {
             var positionMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
             _barriel.ChangeDirection(positionMouse);
         }
         else
         {
             _barriel.ChangeDirection(_currentTarget.position);
+        }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            _barriel.Shoot();
         }
 
         AfterUpdate();

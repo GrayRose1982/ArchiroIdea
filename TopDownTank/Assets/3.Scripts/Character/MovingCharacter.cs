@@ -24,7 +24,5 @@ public class MovingCharacter : MonoBehaviour
         _dir.Normalize();
 
         _trans.position = (Vector3)(_dir * _speed * Time.deltaTime) + _trans.position;
-        _trans.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg - 90);
-
     }
 }
